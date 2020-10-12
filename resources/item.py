@@ -1,5 +1,5 @@
 from flask_jwt_extended.utils import get_jwt_identity
-from flask_jwt_extended.view_decorators import jwt_optional
+from flask_jwt_extended.view_decorators import fresh_jwt_required, jwt_optional
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_claims
 from model.item_model import ItemModel
@@ -17,6 +17,7 @@ class Item(Resource):
             return item.json() 
         return {'message': 'Item not found.'}, 404
 
+    @fresh_jwt_required
     def post(self, name):
         if ItemModel.find_by_name(name):
             return {'message': "An item with name '{}' already exists.".format(name)}, 400
